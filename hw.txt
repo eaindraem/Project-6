@@ -1,0 +1,284 @@
+﻿1. A.
+int main()
+{
+int arr[3] = { 5, 10, 15 };
+                int* ptr = arr;
+
+
+                *ptr = 30;          // set arr[0] to 30
+               *(ptr + 1) = 20;      // set arr[1] to 20
+                ptr[2] = 10;        // set arr[2] to 10
+
+
+                while (ptr < &arr[3])
+            {
+                cout << *ptr << endl;    // print values
+                ptr++;
+            }
+
+
+}
+________________
+
+
+B.         The original function doesn’t output the correct maximum item in the array because the function isn’t able to pass the modified pToMax value into ptr in the main. (The modified pToMax is local to the function.) To fix this,         
+
+
+                void findMax(int arr[], int n, int*& pToMax)
+{
+        if (n <= 0) 
+            return;      // no items, no maximum!
+    
+        pToMax = arr;
+
+
+        for (int i = 1; i < n; i++)
+        {
+            if (arr[i] > *pToMax)
+                 pToMax = arr + i;
+        }
+}
+    int main()
+    {
+        int nums[4] = { 5, 3, 15, 6 };
+        int* ptr = &nums[0];
+        findMax(nums, 4, ptr);
+        cout << "The maximum is at address " << ptr << endl;
+        cout << "It's at position " << ptr - nums << endl;
+        cout << "Its value is " << *ptr << endl;
+    }
+
+
+C. It wasn’t working because the ptr was declared as a pointer, and uninitialized. When dereferenced(pointer is followed) in the function, it becomes undefined behavior. Here is a way to fix it: 
+
+
+void computeCube(int n, int* ncubed)
+    {
+        *ncubed = n * n * n;
+    }
+
+
+    int main()
+    {
+        int ptr;
+        computeCube(5, &ptr);
+        cout << "Five cubed is " << ptr << endl;
+    }
+________________
+
+
+D. The problems with the implementation of the function are 
+1. if (str1 != str2) AND str1 == str2 : comparing str1 to str2 - even though it meant to compare the contents of the string, the program is comparing the memory address.
+2. while (str1 != 0  &&  str2 != 0) : even though it meant to compare if the strings ended yet (null byte), it is comparing if the pointers equal to 0 or not. 
+
+
+A way to fix it is as follows: 
+    bool strequal( char str1[],  char str2[])
+   {
+       while (*str1 != 0  &&  *str2 != 0)  // zero bytes at ends
+       {
+           if (*str1 != *str2)  // compare corresponding characters
+                   return false;
+           str1++;         // advance to the next character
+           str2++;
+       }
+       return *str1 == *str2;   // both ended at same time?
+   }
+    int main()
+    {
+        char a[15] = "Chen, G.";
+        char b[15] = "Chen, Y.";
+        cout << strequal(a,b) << endl;
+
+
+        if (strequal(a,b))
+            cout << "They're the same person!\n";
+     }  
+e.        The function getPtrToArray and nochange are returning pointers that are local to the functions. Thus, pointer pointing to anArray can be pointing at anything, for example, it can be pointing at the junk array. Thus, when this pointer is accessed, it becomes undefined behavior / prints out random garbage. 
+________________
+2. A. Declare a pointer variable named cat that can point to a variable of type double.
+double* cat; 
+
+
+B. Declare mouse to be a 5-element array of doubles.
+double mouse[5];
+
+
+C. Make the cat variable point to the last element of mouse.
+cat = &mouse[4];
+
+
+D. Make the double pointed to by cat equal to 25, using the * operator.
+*cat = 25; 
+
+
+E. Without using the cat pointer, and without using square brackets, set the fourth element (i.e., the one at position 3) of the mouse array to have the value 17.
+*(mouse + 3) = 17; 
+
+
+F.  Move the cat pointer back by three doubles.
+cat = cat - 3;
+
+
+G. Using square brackets, but without using the name mouse, set the third element (i.e., the one at position 2) of the mouse array to have the value 42. (You may use cat.)
+cat[1] = 42;
+
+
+H. Without using the * operator or the name mouse, but using square brackets, set the double pointed to by cat to have the value 54.
+cat[0] = 54;
+
+
+I.  Using the == operator in the initialization expression, declare a bool variable named d and initialize it with an expression that evaluates to true if cat points to the double at the start of the mouse array, and to false otherwise.
+bool d = cat == &mouse[0];
+
+
+J. Using the * operator in the initialization expression, but no square brackets, declare a bool variable named b and initialize it with an expression that evaluates to true if the double pointed to by cat is equal to the double immediately following the double pointed to by cat, and to false otherwise. Do not use the name mouse.
+bool b = *cat == *(cat + 1);
+3. A. 
+double mean(const double* scores, int numScores)
+{
+double tot = 0;
+for ( int i = 0; i < numScores; i++)
+{
+        tot += *(scores + i); 
+}
+return tot/numScores;
+}
+
+
+
+
+________________
+
+
+
+
+B. 
+const char* findTheChar(const char* str, char chr)
+ {
+     for (int k = 0; *(str + k) != 0; k++)
+         if (*(str+k) == chr)
+             return str + k;
+
+
+     return nullptr;
+ }
+
+
+________________
+
+
+
+
+C. 
+const char* findTheChar(const char* str, char chr)
+ {
+    while (*str != 0 && *str != chr)
+    {
+        str++;
+    }
+    if (*str == 0)
+        return nullptr;
+    else
+        return str;
+ }
+
+
+
+
+________________
+
+
+
+
+
+
+
+
+4. The first line of output is 
+3
+* outputs from cout << &array[5] - ptr << endl;
+* it prints out 3 because &array[5] gives the address of 5th position in the array. 
+* ptr is pointing at the position 2 in the array at the time. 
+* The difference between those 2 positions(memory address) is 3. 
+Then, it outputs the array: 
+4
+79
+-1
+9
+22
+19                                                 bold = pointer position in the array below
+* ptr points to position 1 in array after calling maxwell function since 1st is bigger than 3rd 
+* variable pointed by ptr is changed to -1 → index 0 = -1 → {-1, 3, 4, 17, 22, 19} 
+* pointer moves right 2 position → pointing at index 2 now → {-1, 3, 4, 17, 22, 19}
+* one position after the pointer becomes 9 → index 3 = 9 → {-1, 3, 4, 9, 22, 19}
+* add 1 position to array[0], the variable at index 1 becomes 79 → {-1, 79, 4, 9, 22, 19}
+* swap 1 makes local pointer a points to &array[1], local pointer b points to &array[0]
+* swap 2 makes another local pointer a point to index 0 at array →{-1, 79, 4, 9, 22, 19}
+* swap 2 makes another local pointer b point to index 2 at array → {-1, 79, 4, 9, 22, 19}
+* swap 2 makes temp = the variable a is pointing to → temp = -1 
+* swap 2 makes the variable a points to = variable b points to → {4, 79, 4, 9, 22, 19}
+* swap 2 makes variable b points to = temp → {4, 79, -1, 9, 22, 19}
+* prints out the resulting array
+
+
+
+
+________________
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5.         //remove all upper and lower case ‘s’ from the string 
+void removeS(char* str)
+{
+    while (*str != 0)
+    {
+        if (*str == 's' || *str == 'S')
+        {
+            char* temp = str;
+            while (*str != 0)        //move all variable following ‘s’ or ‘S’ one position up 
+            {
+                *str = *(str + 1);
+                str++;
+            }
+            str = temp;                //reset the pointer to where ‘s’ or ‘S’ was initially found 
+        }
+        else
+            str++;
+    }
+}
